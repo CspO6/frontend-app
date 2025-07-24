@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Tienda } from '../../shared/models/tienda.model';
 import { environment } from '../../../environments/environment';
-
+import { CreateTiendaDTO } from '../../shared/dtos/CreateTiendaDTO';
+import { UpdateTiendaDTO } from '../../shared/dtos/UpdateTiendaDTO'; 
 @Injectable({
   providedIn: 'root'
 })
@@ -20,11 +21,11 @@ export class TiendaService {
     return this.http.get<Tienda>(`${this.apiUrl}/${id}`);
   }
 
-  create(tienda: Tienda): Observable<Tienda> {
+ create(tienda: CreateTiendaDTO): Observable<Tienda> {
     return this.http.post<Tienda>(this.apiUrl, tienda);
   }
 
-  update(id: number, tienda: Tienda) {
+ update(id: number, tienda: UpdateTiendaDTO): Observable<any> {
   return this.http.put(`${this.apiUrl}/${id}`, tienda);
 }
 

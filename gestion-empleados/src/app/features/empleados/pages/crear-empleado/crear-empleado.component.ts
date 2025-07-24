@@ -6,6 +6,7 @@ import { TiendaService } from '../../../../core/services/tienda.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Tienda } from '../../../../shared/models/tienda.model';
+import { CreateEmpleadoDTO } from '../../../../shared/dtos/CreateEmpleadoDTO';
 
 @Component({
   selector: 'app-crear-empleado',
@@ -33,7 +34,7 @@ export class CrearEmpleadoComponent implements OnInit {
       cargo: ['', Validators.required],
       fechaIngreso: ['', Validators.required],
       estaActivo: [true],
-      tiendaId: [null]
+      tiendaId: [null, Validators.required]
     });
 
     this.tiendaService.getAll().subscribe({
@@ -59,14 +60,15 @@ export class CrearEmpleadoComponent implements OnInit {
 
     const formValue = this.empleadoForm.value;
 
-    // Convertir fecha a ISO 8601
-    const empleado = {
-      ...formValue,
-      fechaIngreso: new Date(formValue.fechaIngreso).toISOString()
+    const empleado: CreateEmpleadoDTO = {
+      nombre: formValue.nombre,
+      apellido: formValue.apellido,
+      correo: formValue.correo,
+      cargo: formValue.cargo,
+      fechaIngreso: new Date(formValue.fechaIngreso).toISOString(),
+      estaActivo: formValue.estaActivo,
+      tiendaId: Number(formValue.tiendaId) 
     };
-
-    console.log('Empleado enviado:', empleado);
-    console.log('Tipo de tiendaId:', typeof empleado.tiendaId);
 
     this.empleadoService.create(empleado).subscribe({
       next: () => {

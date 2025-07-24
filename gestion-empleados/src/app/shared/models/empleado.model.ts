@@ -4,8 +4,6 @@ export interface Empleado {
   apellido: string;
   correo: string;
   cargo: string;
-  usuario: string;
-  clave: string;
   fechaIngreso: string;
   estaActivo: boolean;
   tiendaId?: number;

@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { CommonModule } from '@angular/common';
 import { Tienda } from '../../../../shared/models/tienda.model';
 import Swal from 'sweetalert2';
+import { UpdateEmpleadoDTO } from '../../../../shared/dtos/UpdateEmpleadoDTO';
 
 @Component({
   selector: 'app-editar-empleado',
@@ -72,10 +73,16 @@ export class EditarEmpleadoComponent implements OnInit {
       return;
     }
 
-    const empleado = {
-      ...this.empleadoForm.value,
-      id: this.id,
-      fechaIngreso: new Date(this.empleadoForm.value.fechaIngreso).toISOString()
+    const formValue = this.empleadoForm.value;
+
+    const empleado: UpdateEmpleadoDTO = {
+      nombre: formValue.nombre,
+      apellido: formValue.apellido,
+      correo: formValue.correo,
+      cargo: formValue.cargo,
+      fechaIngreso: new Date(formValue.fechaIngreso).toISOString(),
+      estaActivo: formValue.estaActivo,
+      tiendaId: Number(formValue.tiendaId)
     };
 
     this.empleadoService.update(this.id, empleado).subscribe({

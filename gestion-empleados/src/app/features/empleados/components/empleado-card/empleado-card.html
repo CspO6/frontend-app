@@ -1,0 +1,7 @@
+<div class="bg-white shadow-md rounded p-4 w-full max-w-md mx-auto mb-4">
+  <h2 class="text-xl font-bold text-gray-800">{{ empleado.nombre }} {{ empleado.apellido }}</h2>
+  <p class="text-gray-600">Correo: {{ empleado.correo }}</p>
+  <p class="text-gray-600">Cargo: {{ empleado.cargo }}</p>
+  <p class="text-gray-600">Fecha de Ingreso: {{ empleado.fechaIngreso | date }}</p>
+  <p class="text-gray-600">Activo: {{ empleado.estaActivo ? 'Sí' : 'No' }}</p>
+</div>

@@ -5,11 +5,12 @@ import { EmpleadoService } from '../../../../core/services/empleado.service';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { EmpleadoCardComponent } from '../../components/empleado-card/empleado-card';
 
 @Component({
   selector: 'app-listado-empleados',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, EmpleadoCardComponent, RouterModule, FormsModule],
   templateUrl: './listado-empleados.component.html',
   styleUrls: ['./listado-empleados.component.scss']
 })
@@ -80,6 +81,13 @@ export class ListadoEmpleadosComponent implements OnInit {
     );
     this.paginaActual = 1;
   }
+
+  vistaTarjeta: boolean = false;
+
+  alternarVista(): void {
+    this.vistaTarjeta = !this.vistaTarjeta;
+  }
+
 
   eliminarEmpleado(id: number): void {
     Swal.fire({
