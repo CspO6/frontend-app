@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -9,4 +10,15 @@ import { CommonModule } from '@angular/common';
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.scss']
 })
-export class NavbarComponent {}
+export class NavbarComponent {
+  constructor(private router: Router) {}
+
+  logout(): void {
+    localStorage.removeItem('token');
+    this.router.navigate(['/login']);
+  }
+
+  get isLoggedIn(): boolean {
+    return !!localStorage.getItem('token');
+  }
+}

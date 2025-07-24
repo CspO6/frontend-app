@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EmpleadoService } from '../../../../core/services/empleado.service';
-import { Empleado } from '../../../../shared/models/empleado.model';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { TiendaService } from '../../../../core/services/tienda.service';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { Tienda } from '../../../../shared/models/tienda.model';
 import Swal from 'sweetalert2';
 
@@ -13,25 +12,15 @@ import Swal from 'sweetalert2';
   standalone: true,
   templateUrl: './editar-empleado.component.html',
   styleUrls: ['./edita-empleado.component.scss'],
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
 })
 export class EditarEmpleadoComponent implements OnInit {
-  empleado: Empleado = {
-    nombre: '',
-    apellido: '',
-    correo: '',
-    cargo: '',
-    usuario: '',
-    clave: '',
-    fechaIngreso: new Date().toISOString().substring(0, 10),
-    estaActivo: true,
-    tiendaId: undefined
-  };
-
+  empleadoForm!: FormGroup;
   tiendas: Tienda[] = [];
   id!: number;
 
   constructor(
+    private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private empleadoService: EmpleadoService,
@@ -41,46 +30,39 @@ export class EditarEmpleadoComponent implements OnInit {
   ngOnInit(): void {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
 
+    this.empleadoForm = this.fb.group({
+      nombre: ['', Validators.required],
+      apellido: ['', Validators.required],
+      correo: ['', [Validators.required, Validators.email]],
+      cargo: ['', Validators.required],
+      fechaIngreso: [new Date().toISOString().substring(0, 10), Validators.required],
+      estaActivo: [true],
+      tiendaId: [undefined, Validators.required]
+    });
+
     this.tiendaService.getAll().subscribe({
-      next: (data) => {
-        this.tiendas = data;
-      },
-      error: (error) => {
-        console.error('Error al cargar tiendas', error);
-      }
+      next: (res) => (this.tiendas = res),
+      error: (err) => console.error('Error al cargar tiendas:', err),
     });
 
     this.empleadoService.getById(this.id).subscribe({
       next: (data) => {
-        this.empleado = data;
-
-        if (this.empleado.fechaIngreso?.includes('T')) {
-          this.empleado.fechaIngreso = this.empleado.fechaIngreso.split('T')[0];
+        if (data.fechaIngreso?.includes('T')) {
+          data.fechaIngreso = data.fechaIngreso.split('T')[0];
         }
+        this.empleadoForm.patchValue(data);
       },
-      error: (error) => {
-        console.error('Error al obtener empleado', error);
-      }
+      error: (err) => console.error('Error al obtener empleado:', err)
     });
   }
 
   actualizarEmpleado(): void {
-    const camposObligatorios = [
-      { campo: this.empleado.nombre, nombre: 'Nombre' },
-      { campo: this.empleado.apellido, nombre: 'Apellido' },
-      { campo: this.empleado.correo, nombre: 'Correo' },
-      { campo: this.empleado.cargo, nombre: 'Cargo' },
-      { campo: this.empleado.usuario, nombre: 'Usuario' },
-      { campo: this.empleado.clave, nombre: 'Contraseña' },
-      { campo: this.empleado.tiendaId, nombre: 'Tienda' },
-    ];
-
-    const campoInvalido = camposObligatorios.find(c => !c.campo || c.campo.toString().trim() === '');
-    if (campoInvalido) {
+    if (this.empleadoForm.invalid) {
+      this.empleadoForm.markAllAsTouched();
       Swal.fire({
         icon: 'warning',
-        title: 'Validación requerida',
-        text: `El campo "${campoInvalido.nombre}" es obligatorio.`,
+        title: 'Campos inválidos',
+        text: 'Por favor complete todos los campos obligatorios.',
         customClass: {
           popup: 'rounded-lg shadow-xl',
           confirmButton: 'bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
@@ -90,11 +72,13 @@ export class EditarEmpleadoComponent implements OnInit {
       return;
     }
 
-    if (this.empleado.fechaIngreso?.includes('T')) {
-      this.empleado.fechaIngreso = this.empleado.fechaIngreso.split('T')[0];
-    }
+    const empleado = {
+      ...this.empleadoForm.value,
+      id: this.id,
+      fechaIngreso: new Date(this.empleadoForm.value.fechaIngreso).toISOString()
+    };
 
-    this.empleadoService.update(this.id, this.empleado).subscribe({
+    this.empleadoService.update(this.id, empleado).subscribe({
       next: () => {
         this.router.navigate(['/empleados']);
       },

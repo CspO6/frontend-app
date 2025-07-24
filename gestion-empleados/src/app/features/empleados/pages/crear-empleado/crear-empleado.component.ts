@@ -1,84 +1,74 @@
 import { Component, OnInit } from '@angular/core';
-import { Empleado } from '../../../../shared/models/empleado.model';
-import { EmpleadoService } from '../../../../core/services/empleado.service';
-import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { TiendaService } from '../../../../core/services/tienda.service';
-import { Tienda } from '../../../../shared/models/tienda.model';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { EmpleadoService } from '../../../../core/services/empleado.service';
+import { TiendaService } from '../../../../core/services/tienda.service';
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { Tienda } from '../../../../shared/models/tienda.model';
 
 @Component({
   selector: 'app-crear-empleado',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './crear-empleado.component.html',
   styleUrls: ['./crear-empleado.component.scss']
 })
 export class CrearEmpleadoComponent implements OnInit {
-  empleado: Empleado = {
-    nombre: '',
-    apellido: '',
-    correo: '',
-    cargo: '',
-    usuario: '',
-    clave: '',
-    fechaIngreso: new Date().toISOString().substring(0, 10),
-    estaActivo: true,
-    tiendaId: undefined,
-  };
-
+  empleadoForm!: FormGroup;
   tiendas: Tienda[] = [];
 
   constructor(
+    private fb: FormBuilder,
     private empleadoService: EmpleadoService,
     private tiendaService: TiendaService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
+    this.empleadoForm = this.fb.group({
+      nombre: ['', Validators.required],
+      apellido: ['', Validators.required],
+      correo: ['', [Validators.required, Validators.email]],
+      cargo: ['', Validators.required],
+      fechaIngreso: ['', Validators.required],
+      estaActivo: [true],
+      tiendaId: [null]
+    });
+
     this.tiendaService.getAll().subscribe({
-      next: (res) => (this.tiendas = res),
-      error: (err) => console.error('Error al cargar tiendas:', err),
+      next: (res) => this.tiendas = res,
+      error: (err) => console.error('Error al cargar tiendas:', err)
     });
   }
 
   guardarEmpleado(): void {
-    const { nombre, apellido, correo, cargo, usuario, clave, tiendaId } = this.empleado;
-
-    if (!nombre || !apellido || !correo || !cargo || !usuario || !clave || !tiendaId) {
+    if (this.empleadoForm.invalid) {
+      this.empleadoForm.markAllAsTouched();
       Swal.fire({
         icon: 'warning',
-        title: 'Campos requeridos',
-        text: 'Por favor, complete todos los campos obligatorios.',
+        title: 'Campos inválidos',
+        text: 'Por favor, revise los campos del formulario.',
+        buttonsStyling: false,
         customClass: {
-          popup: 'rounded-lg p-4',
-          title: 'text-lg font-semibold text-red-600',
-          confirmButton: 'bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded'
-        },
-        buttonsStyling: false
+          confirmButton: 'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded'
+        }
       });
       return;
     }
 
-    // Validación adicional de correo
-    const correoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
-    if (!correoValido) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Correo inválido',
-        text: 'El formato del correo no es válido.',
-        customClass: {
-          popup: 'rounded-lg p-4',
-          title: 'text-lg font-semibold text-red-600',
-          confirmButton: 'bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded'
-        },
-        buttonsStyling: false
-      });
-      return;
-    }
+    const formValue = this.empleadoForm.value;
 
-    this.empleadoService.create(this.empleado).subscribe({
+    // Convertir fecha a ISO 8601
+    const empleado = {
+      ...formValue,
+      fechaIngreso: new Date(formValue.fechaIngreso).toISOString()
+    };
+
+    console.log('Empleado enviado:', empleado);
+    console.log('Tipo de tiendaId:', typeof empleado.tiendaId);
+
+    this.empleadoService.create(empleado).subscribe({
       next: () => {
         Swal.fire({
           icon: 'success',
@@ -95,14 +85,12 @@ export class CrearEmpleadoComponent implements OnInit {
           icon: 'error',
           title: 'Error',
           text: 'No se pudo registrar el empleado.',
+          buttonsStyling: false,
           customClass: {
-            popup: 'rounded-lg p-4',
-            title: 'text-lg font-semibold text-red-600',
-            confirmButton: 'bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded'
-          },
-          buttonsStyling: false
+            confirmButton: 'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded'
+          }
         });
-      },
+      }
     });
   }
 }
