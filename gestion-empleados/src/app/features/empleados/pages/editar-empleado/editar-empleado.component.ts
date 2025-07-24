@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TiendaService } from '../../../../core/services/tienda.service';
 import { Tienda } from '../../../../shared/models/tienda.model';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-editar-empleado',
@@ -40,7 +41,6 @@ export class EditarEmpleadoComponent implements OnInit {
   ngOnInit(): void {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
 
-
     this.tiendaService.getAll().subscribe({
       next: (data) => {
         this.tiendas = data;
@@ -50,12 +50,10 @@ export class EditarEmpleadoComponent implements OnInit {
       }
     });
 
-  
     this.empleadoService.getById(this.id).subscribe({
       next: (data) => {
         this.empleado = data;
 
-       
         if (this.empleado.fechaIngreso?.includes('T')) {
           this.empleado.fechaIngreso = this.empleado.fechaIngreso.split('T')[0];
         }
@@ -67,7 +65,31 @@ export class EditarEmpleadoComponent implements OnInit {
   }
 
   actualizarEmpleado(): void {
-    
+    const camposObligatorios = [
+      { campo: this.empleado.nombre, nombre: 'Nombre' },
+      { campo: this.empleado.apellido, nombre: 'Apellido' },
+      { campo: this.empleado.correo, nombre: 'Correo' },
+      { campo: this.empleado.cargo, nombre: 'Cargo' },
+      { campo: this.empleado.usuario, nombre: 'Usuario' },
+      { campo: this.empleado.clave, nombre: 'Contraseña' },
+      { campo: this.empleado.tiendaId, nombre: 'Tienda' },
+    ];
+
+    const campoInvalido = camposObligatorios.find(c => !c.campo || c.campo.toString().trim() === '');
+    if (campoInvalido) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Validación requerida',
+        text: `El campo "${campoInvalido.nombre}" es obligatorio.`,
+        customClass: {
+          popup: 'rounded-lg shadow-xl',
+          confirmButton: 'bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+        },
+        buttonsStyling: false
+      });
+      return;
+    }
+
     if (this.empleado.fechaIngreso?.includes('T')) {
       this.empleado.fechaIngreso = this.empleado.fechaIngreso.split('T')[0];
     }
@@ -78,6 +100,16 @@ export class EditarEmpleadoComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error al actualizar empleado', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo actualizar el empleado.',
+          customClass: {
+            popup: 'rounded-lg shadow-xl',
+            confirmButton: 'bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded'
+          },
+          buttonsStyling: false
+        });
       }
     });
   }

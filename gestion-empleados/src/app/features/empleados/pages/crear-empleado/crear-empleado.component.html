@@ -1,29 +1,75 @@
 <div class="p-6 max-w-xl mx-auto">
   <h2 class="text-2xl font-bold mb-4">Crear Empleado</h2>
 
-  <form (ngSubmit)="guardarEmpleado()" class="space-y-4">
-    <input [(ngModel)]="empleado.nombre" name="nombre" placeholder="Nombre" class="w-full border px-4 py-2 rounded" required />
-    <input [(ngModel)]="empleado.apellido" name="apellido" placeholder="Apellido" class="w-full border px-4 py-2 rounded" required />
-    <input [(ngModel)]="empleado.correo" name="correo" type="email" placeholder="Correo" class="w-full border px-4 py-2 rounded" required />
-    <input [(ngModel)]="empleado.cargo" name="cargo" placeholder="Cargo" class="w-full border px-4 py-2 rounded" required />
-    <input [(ngModel)]="empleado.usuario" name="usuario" placeholder="Usuario" class="w-full border px-4 py-2 rounded" required />
-    <input [(ngModel)]="empleado.clave" name="clave" type="password" placeholder="Contraseña" class="w-full border px-4 py-2 rounded" required />
+  <form (ngSubmit)="guardarEmpleado()" class="space-y-4" #form="ngForm">
 
-    <!-- Selección de Tienda -->
-    <select [(ngModel)]="empleado.tiendaId" name="tiendaId" class="w-full border px-4 py-2 rounded" required>
+
+    <input [(ngModel)]="empleado.nombre" name="nombre" #nombre="ngModel"
+           placeholder="Nombre"
+           class="w-full border px-4 py-2 rounded"
+           required />
+    <p *ngIf="nombre.invalid && nombre.touched" class="text-red-600 text-sm">El nombre es obligatorio.</p>
+
+    <input [(ngModel)]="empleado.apellido" name="apellido" #apellido="ngModel"
+           placeholder="Apellido"
+           class="w-full border px-4 py-2 rounded"
+           required />
+    <p *ngIf="apellido.invalid && apellido.touched" class="text-red-600 text-sm">El apellido es obligatorio.</p>
+
+
+    <input [(ngModel)]="empleado.correo" name="correo" #correo="ngModel"
+           type="email"
+           placeholder="Correo"
+           class="w-full border px-4 py-2 rounded"
+           required />
+    <p *ngIf="correo.invalid && correo.touched" class="text-red-600 text-sm">Correo inválido o vacío.</p>
+
+
+    <input [(ngModel)]="empleado.cargo" name="cargo" #cargo="ngModel"
+           placeholder="Cargo"
+           class="w-full border px-4 py-2 rounded"
+           required />
+    <p *ngIf="cargo.invalid && cargo.touched" class="text-red-600 text-sm">El cargo es obligatorio.</p>
+
+
+    <input [(ngModel)]="empleado.usuario" name="usuario" #usuario="ngModel"
+           placeholder="Usuario"
+           class="w-full border px-4 py-2 rounded"
+           required />
+    <p *ngIf="usuario.invalid && usuario.touched" class="text-red-600 text-sm">El usuario es obligatorio.</p>
+
+
+    <input [(ngModel)]="empleado.clave" name="clave" #clave="ngModel"
+           type="password"
+           placeholder="Contraseña"
+           class="w-full border px-4 py-2 rounded"
+           required minlength="4" />
+    <p *ngIf="clave.invalid && clave.touched" class="text-red-600 text-sm">La contraseña debe tener al menos 4 caracteres.</p>
+
+
+    <select [(ngModel)]="empleado.tiendaId" name="tiendaId" #tienda="ngModel"
+            class="w-full border px-4 py-2 rounded"
+            required>
       <option [ngValue]="undefined" disabled selected>Seleccione una tienda</option>
       <option *ngFor="let tienda of tiendas" [ngValue]="tienda.id">{{ tienda.nombre }}</option>
     </select>
+    <p *ngIf="tienda.invalid && tienda.touched" class="text-red-600 text-sm">Debe seleccionar una tienda.</p>
+
 
     <div class="flex justify-between items-center">
       <label class="flex items-center space-x-2">
         <input type="checkbox" [(ngModel)]="empleado.estaActivo" name="estado" />
         <span>Activo</span>
       </label>
-      <input [(ngModel)]="empleado.fechaIngreso" name="fechaIngreso" type="date" class="border px-2 py-1 rounded" />
+      <input [(ngModel)]="empleado.fechaIngreso" name="fechaIngreso"
+             type="date"
+             class="border px-2 py-1 rounded" />
     </div>
 
-    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+
+    <button type="submit"
+            [disabled]="form.invalid"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed">
       Guardar
     </button>
   </form>

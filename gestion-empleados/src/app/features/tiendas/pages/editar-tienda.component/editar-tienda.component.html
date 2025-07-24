@@ -2,21 +2,33 @@
   <h2 class="text-2xl font-bold mb-4">Editar Tienda</h2>
 
   <form [formGroup]="tiendaForm" (ngSubmit)="actualizarTienda()" class="space-y-4">
-    <input
-      formControlName="nombre"
-      placeholder="Nombre"
-      class="w-full border px-4 py-2 rounded"
-      type="text"
-      required
-    />
+    <div>
+      <input
+        formControlName="nombre"
+        placeholder="Nombre"
+        class="w-full border px-4 py-2 rounded"
+        type="text"
+        required
+      />
+      <div *ngIf="tiendaForm.get('nombre')?.touched && tiendaForm.get('nombre')?.invalid" class="text-red-600 text-sm mt-1">
+        <span *ngIf="tiendaForm.get('nombre')?.errors?.['required']">El nombre es obligatorio.</span>
+        <span *ngIf="tiendaForm.get('nombre')?.errors?.['maxlength']">Máximo 100 caracteres.</span>
+      </div>
+    </div>
 
-    <input
-      formControlName="direccion"
-      placeholder="Dirección"
-      class="w-full border px-4 py-2 rounded"
-      type="text"
-      required
-    />
+    <div>
+      <input
+        formControlName="direccion"
+        placeholder="Dirección"
+        class="w-full border px-4 py-2 rounded"
+        type="text"
+        required
+      />
+      <div *ngIf="tiendaForm.get('direccion')?.touched && tiendaForm.get('direccion')?.invalid" class="text-red-600 text-sm mt-1">
+        <span *ngIf="tiendaForm.get('direccion')?.errors?.['required']">La dirección es obligatoria.</span>
+        <span *ngIf="tiendaForm.get('direccion')?.errors?.['maxlength']">Máximo 200 caracteres.</span>
+      </div>
+    </div>
 
     <label class="flex items-center space-x-2">
       <input type="checkbox" formControlName="estaActiva" />

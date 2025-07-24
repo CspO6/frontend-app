@@ -25,8 +25,8 @@ export class EditarTiendaComponent implements OnInit {
 
   ngOnInit(): void {
     this.tiendaForm = this.fb.group({
-      nombre: ['', Validators.required],
-      direccion: ['', Validators.required],
+      nombre: ['', [Validators.required, Validators.maxLength(100)]],
+      direccion: ['', [Validators.required, Validators.maxLength(200)]],
       estaActiva: [false]
     });
 
@@ -49,18 +49,28 @@ export class EditarTiendaComponent implements OnInit {
   }
 
   actualizarTienda(): void {
-  if (this.tiendaForm.valid) {
-    const tiendaActualizada = {
-      id: this.tiendaId, 
-      ...this.tiendaForm.value
-    };
+    if (this.tiendaForm.valid) {
+      const tiendaActualizada = {
+        id: this.tiendaId,
+        ...this.tiendaForm.value
+      };
 
-    this.tiendaService.update(this.tiendaId, tiendaActualizada).subscribe(() => {
-      this.router.navigate(['/tiendas']);
-    });
+      this.tiendaService.update(this.tiendaId, tiendaActualizada).subscribe(() => {
+        this.router.navigate(['/tiendas']);
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Formulario inválido',
+        text: 'Por favor completa todos los campos obligatorios.',
+        customClass: {
+          popup: 'rounded-lg',
+          title: 'text-red-600 text-lg',
+          confirmButton: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700'
+        }
+      });
+    }
   }
-}
-
 
   eliminarTienda(): void {
     Swal.fire({

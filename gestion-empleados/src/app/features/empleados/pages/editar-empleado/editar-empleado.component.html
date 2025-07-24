@@ -1,29 +1,86 @@
 <div class="p-6 max-w-xl mx-auto">
   <h2 class="text-2xl font-bold mb-4">Editar Empleado</h2>
 
-  <form (ngSubmit)="actualizarEmpleado()" class="space-y-4">
-    <input [(ngModel)]="empleado.nombre" name="nombre" placeholder="Nombre" class="w-full border px-4 py-2 rounded" required />
-    <input [(ngModel)]="empleado.apellido" name="apellido" placeholder="Apellido" class="w-full border px-4 py-2 rounded" required />
-    <input [(ngModel)]="empleado.correo" name="correo" type="email" placeholder="Correo" class="w-full border px-4 py-2 rounded" required />
-    <input [(ngModel)]="empleado.cargo" name="cargo" placeholder="Cargo" class="w-full border px-4 py-2 rounded" required />
-    <input [(ngModel)]="empleado.usuario" name="usuario" placeholder="Usuario" class="w-full border px-4 py-2 rounded" required />
-    <input [(ngModel)]="empleado.clave" name="clave" type="password" placeholder="Contraseña" class="w-full border px-4 py-2 rounded" required />
+  <form #form="ngForm" (ngSubmit)="actualizarEmpleado()" class="space-y-4">
+ 
+    <div>
+      <input [(ngModel)]="empleado.nombre" name="nombre" placeholder="Nombre"
+        class="w-full border px-4 py-2 rounded" required #nombre="ngModel" />
+      <div *ngIf="nombre.invalid && nombre.touched" class="text-red-600 text-sm mt-1">
+        El nombre es obligatorio.
+      </div>
+    </div>
 
-    <!-- Selección de tienda -->
-    <select [(ngModel)]="empleado.tiendaId" name="tiendaId" class="w-full border px-4 py-2 rounded" required>
-      <option [ngValue]="undefined" disabled>Seleccione una tienda</option>
-      <option *ngFor="let tienda of tiendas" [ngValue]="tienda.id">{{ tienda.nombre }}</option>
-    </select>
+ 
+    <div>
+      <input [(ngModel)]="empleado.apellido" name="apellido" placeholder="Apellido"
+        class="w-full border px-4 py-2 rounded" required #apellido="ngModel" />
+      <div *ngIf="apellido.invalid && apellido.touched" class="text-red-600 text-sm mt-1">
+        El apellido es obligatorio.
+      </div>
+    </div>
+
+
+    <div>
+      <input [(ngModel)]="empleado.correo" name="correo" type="email" placeholder="Correo"
+        class="w-full border px-4 py-2 rounded" required #correo="ngModel" />
+      <div *ngIf="correo.invalid && correo.touched" class="text-red-600 text-sm mt-1">
+        Ingrese un correo válido.
+      </div>
+    </div>
+
+
+    <div>
+      <input [(ngModel)]="empleado.cargo" name="cargo" placeholder="Cargo"
+        class="w-full border px-4 py-2 rounded" required #cargo="ngModel" />
+      <div *ngIf="cargo.invalid && cargo.touched" class="text-red-600 text-sm mt-1">
+        El cargo es obligatorio.
+      </div>
+    </div>
+
+
+    <div>
+      <input [(ngModel)]="empleado.usuario" name="usuario" placeholder="Usuario"
+        class="w-full border px-4 py-2 rounded" required #usuario="ngModel" />
+      <div *ngIf="usuario.invalid && usuario.touched" class="text-red-600 text-sm mt-1">
+        El usuario es obligatorio.
+      </div>
+    </div>
+
+
+    <div>
+      <input [(ngModel)]="empleado.clave" name="clave" type="password" placeholder="Contraseña"
+        class="w-full border px-4 py-2 rounded" required #clave="ngModel" />
+      <div *ngIf="clave.invalid && clave.touched" class="text-red-600 text-sm mt-1">
+        La contraseña es obligatoria.
+      </div>
+    </div>
+
+
+    <div>
+      <select [(ngModel)]="empleado.tiendaId" name="tiendaId"
+        class="w-full border px-4 py-2 rounded" required #tiendaId="ngModel">
+        <option [ngValue]="undefined" disabled>Seleccione una tienda</option>
+        <option *ngFor="let tienda of tiendas" [ngValue]="tienda.id">{{ tienda.nombre }}</option>
+      </select>
+      <div *ngIf="tiendaId.invalid && tiendaId.touched" class="text-red-600 text-sm mt-1">
+        Debe seleccionar una tienda.
+      </div>
+    </div>
+
 
     <div class="flex justify-between items-center">
       <label class="flex items-center space-x-2">
         <input type="checkbox" [(ngModel)]="empleado.estaActivo" name="estado" />
         <span>Activo</span>
       </label>
-      <input [(ngModel)]="empleado.fechaIngreso" name="fechaIngreso" type="date" class="border px-2 py-1 rounded" />
+      <input [(ngModel)]="empleado.fechaIngreso" name="fechaIngreso" type="date"
+        class="border px-2 py-1 rounded" />
     </div>
 
-    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+    <button type="submit"
+      class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded disabled:opacity-50"
+      [disabled]="form.invalid">
       Actualizar
     </button>
   </form>
