@@ -1,19 +1,30 @@
-<h2 class="text-xl font-bold mb-4">Crear nuevo empleado</h2>
-<form (ngSubmit)="guardarEmpleado()" #empleadoForm="ngForm" class="space-y-4">
-  <input type="text" name="nombre" [(ngModel)]="empleado.nombre" placeholder="Nombre" required class="w-full p-2 border rounded" />
-  <input type="text" name="apellido" [(ngModel)]="empleado.apellido" placeholder="Apellido" required class="w-full p-2 border rounded" />
-  <input type="email" name="correo" [(ngModel)]="empleado.correo" placeholder="Correo" required class="w-full p-2 border rounded" />
-  <input type="text" name="cargo" [(ngModel)]="empleado.cargo" placeholder="Cargo" required class="w-full p-2 border rounded" />
-  <input type="text" name="usuario" [(ngModel)]="empleado.usuario" placeholder="Usuario" required class="w-full p-2 border rounded" />
-  <input type="password" name="clave" [(ngModel)]="empleado.clave" placeholder="Clave" required class="w-full p-2 border rounded" />
-  <input type="date" name="fechaIngreso" [(ngModel)]="empleado.fechaIngreso" required class="w-full p-2 border rounded" />
-  
-  <label class="block">
-    <span class="mr-2">¿Está activo?</span>
-    <input type="checkbox" [(ngModel)]="empleado.estaActivo" name="estaActivo" />
-  </label>
+<div class="p-6 max-w-xl mx-auto">
+  <h2 class="text-2xl font-bold mb-4">Crear Empleado</h2>
 
-  <input type="number" name="tiendaId" [(ngModel)]="empleado.tiendaId" placeholder="ID Tienda (opcional)" class="w-full p-2 border rounded" />
+  <form (ngSubmit)="guardarEmpleado()" class="space-y-4">
+    <input [(ngModel)]="empleado.nombre" name="nombre" placeholder="Nombre" class="w-full border px-4 py-2 rounded" required />
+    <input [(ngModel)]="empleado.apellido" name="apellido" placeholder="Apellido" class="w-full border px-4 py-2 rounded" required />
+    <input [(ngModel)]="empleado.correo" name="correo" type="email" placeholder="Correo" class="w-full border px-4 py-2 rounded" required />
+    <input [(ngModel)]="empleado.cargo" name="cargo" placeholder="Cargo" class="w-full border px-4 py-2 rounded" required />
+    <input [(ngModel)]="empleado.usuario" name="usuario" placeholder="Usuario" class="w-full border px-4 py-2 rounded" required />
+    <input [(ngModel)]="empleado.clave" name="clave" type="password" placeholder="Contraseña" class="w-full border px-4 py-2 rounded" required />
 
-  <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Guardar</button>
-</form>
+    <!-- Selección de Tienda -->
+    <select [(ngModel)]="empleado.tiendaId" name="tiendaId" class="w-full border px-4 py-2 rounded" required>
+      <option [ngValue]="undefined" disabled selected>Seleccione una tienda</option>
+      <option *ngFor="let tienda of tiendas" [ngValue]="tienda.id">{{ tienda.nombre }}</option>
+    </select>
+
+    <div class="flex justify-between items-center">
+      <label class="flex items-center space-x-2">
+        <input type="checkbox" [(ngModel)]="empleado.estaActivo" name="estado" />
+        <span>Activo</span>
+      </label>
+      <input [(ngModel)]="empleado.fechaIngreso" name="fechaIngreso" type="date" class="border px-2 py-1 rounded" />
+    </div>
+
+    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+      Guardar
+    </button>
+  </form>
+</div>

@@ -9,7 +9,9 @@ export interface Empleado {
   fechaIngreso: string;
   estaActivo: boolean;
   tiendaId?: number;
+  tiendaNombre?: string;
   tienda?: {
+    id: number;
     nombre: string;
   };
 }

@@ -4,15 +4,21 @@ import { RouterModule } from '@angular/router';
 import { TiendaService } from '../../../../core/services/tienda.service';
 import { Tienda } from '../../../../shared/models/tienda.model';
 import Swal from 'sweetalert2';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-listar-tiendas',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './listar-tiendas.component.html'
 })
 export class ListarTiendasComponent implements OnInit {
   tiendas: Tienda[] = [];
+  tiendasFiltradas: Tienda[] = [];
+  terminoBusqueda: string = '';
+
+  paginaActual: number = 1;
+  elementosPorPagina: number = 5;
 
   constructor(private tiendaService: TiendaService) {}
 
@@ -22,9 +28,43 @@ export class ListarTiendasComponent implements OnInit {
 
   cargarTiendas(): void {
     this.tiendaService.getAll().subscribe({
-      next: (res) => (this.tiendas = res),
+      next: (res) => {
+        this.tiendas = res;
+        this.tiendasFiltradas = res;
+      },
       error: (err) => console.error('Error al cargar tiendas:', err)
     });
+  }
+
+  get tiendasPaginadas(): Tienda[] {
+    const inicio = (this.paginaActual - 1) * this.elementosPorPagina;
+    const fin = inicio + this.elementosPorPagina;
+    return this.tiendasFiltradas.slice(inicio, fin);
+  }
+
+  get totalPaginas(): number {
+    return Math.ceil(this.tiendasFiltradas.length / this.elementosPorPagina);
+  }
+
+  anteriorPagina(): void {
+  if (this.paginaActual > 1) {
+    this.paginaActual--;
+  }
+}
+
+siguientePagina(): void {
+  if (this.paginaActual < this.totalPaginas) {
+    this.paginaActual++;
+  }
+}
+
+  filtrarTiendas(): void {
+    const termino = this.terminoBusqueda.toLowerCase();
+    this.tiendasFiltradas = this.tiendas.filter(t =>
+      t.nombre.toLowerCase().includes(termino) ||
+      t.direccion.toLowerCase().includes(termino)
+    );
+    this.paginaActual = 1; // Resetear la página al filtrar
   }
 
   eliminarTienda(id: number): void {

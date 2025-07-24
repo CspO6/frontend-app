@@ -4,6 +4,8 @@ import { EmpleadoService } from '../../../../core/services/empleado.service';
 import { Empleado } from '../../../../shared/models/empleado.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TiendaService } from '../../../../core/services/tienda.service';
+import { Tienda } from '../../../../shared/models/tienda.model';
 
 @Component({
   selector: 'app-editar-empleado',
@@ -25,19 +27,38 @@ export class EditarEmpleadoComponent implements OnInit {
     tiendaId: undefined
   };
 
+  tiendas: Tienda[] = [];
   id!: number;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private empleadoService: EmpleadoService
+    private empleadoService: EmpleadoService,
+    private tiendaService: TiendaService
   ) {}
 
   ngOnInit(): void {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
+
+
+    this.tiendaService.getAll().subscribe({
+      next: (data) => {
+        this.tiendas = data;
+      },
+      error: (error) => {
+        console.error('Error al cargar tiendas', error);
+      }
+    });
+
+  
     this.empleadoService.getById(this.id).subscribe({
       next: (data) => {
         this.empleado = data;
+
+       
+        if (this.empleado.fechaIngreso?.includes('T')) {
+          this.empleado.fechaIngreso = this.empleado.fechaIngreso.split('T')[0];
+        }
       },
       error: (error) => {
         console.error('Error al obtener empleado', error);
@@ -46,6 +67,11 @@ export class EditarEmpleadoComponent implements OnInit {
   }
 
   actualizarEmpleado(): void {
+    
+    if (this.empleado.fechaIngreso?.includes('T')) {
+      this.empleado.fechaIngreso = this.empleado.fechaIngreso.split('T')[0];
+    }
+
     this.empleadoService.update(this.id, this.empleado).subscribe({
       next: () => {
         this.router.navigate(['/empleados']);
