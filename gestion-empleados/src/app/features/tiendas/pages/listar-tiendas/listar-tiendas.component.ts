@@ -64,7 +64,7 @@ siguientePagina(): void {
       t.nombre.toLowerCase().includes(termino) ||
       t.direccion.toLowerCase().includes(termino)
     );
-    this.paginaActual = 1; // Resetear la página al filtrar
+    this.paginaActual = 1; 
   }
 
   eliminarTienda(id: number): void {

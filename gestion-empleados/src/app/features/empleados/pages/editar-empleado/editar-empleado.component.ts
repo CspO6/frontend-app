@@ -76,32 +76,44 @@ export class EditarEmpleadoComponent implements OnInit {
     const formValue = this.empleadoForm.value;
 
     const empleado: UpdateEmpleadoDTO = {
-      nombre: formValue.nombre,
-      apellido: formValue.apellido,
-      correo: formValue.correo,
-      cargo: formValue.cargo,
-      fechaIngreso: new Date(formValue.fechaIngreso).toISOString(),
-      estaActivo: formValue.estaActivo,
-      tiendaId: Number(formValue.tiendaId)
-    };
+    id: this.id, 
+    nombre: formValue.nombre,
+    apellido: formValue.apellido,
+    correo: formValue.correo,
+    cargo: formValue.cargo,
+    fechaIngreso: new Date(formValue.fechaIngreso).toISOString(),
+    estaActivo: formValue.estaActivo,
+    tiendaId: Number(formValue.tiendaId)
+  };
 
     this.empleadoService.update(this.id, empleado).subscribe({
-      next: () => {
+    next: () => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Actualizado',
+        text: 'El empleado ha sido actualizado correctamente.',
+        customClass: {
+          popup: 'rounded-lg shadow-xl',
+          confirmButton: 'bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded'
+        },
+        buttonsStyling: false
+      }).then(() => {
         this.router.navigate(['/empleados']);
-      },
-      error: (error) => {
-        console.error('Error al actualizar empleado', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se pudo actualizar el empleado.',
-          customClass: {
-            popup: 'rounded-lg shadow-xl',
-            confirmButton: 'bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded'
-          },
-          buttonsStyling: false
-        });
-      }
-    });
+      });
+    },
+    error: (error) => {
+      console.error('Error al actualizar empleado', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo actualizar el empleado.',
+        customClass: {
+          popup: 'rounded-lg shadow-xl',
+          confirmButton: 'bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded'
+        },
+        buttonsStyling: false
+      });
+    }
+  });
   }
 }

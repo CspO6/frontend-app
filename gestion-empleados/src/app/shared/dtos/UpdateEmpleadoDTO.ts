@@ -1,4 +1,5 @@
 export interface UpdateEmpleadoDTO {
+  id?: number;
   nombre: string;
   apellido: string;
   correo: string;

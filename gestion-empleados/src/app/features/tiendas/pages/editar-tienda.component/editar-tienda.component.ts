@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TiendaService } from '../../../../core/services/tienda.service';
 import { switchMap } from 'rxjs';
 import Swal from 'sweetalert2';
+import { UpdateTiendaDTO } from '../../../../shared/dtos/UpdateTiendaDTO'; 
 
 @Component({
   selector: 'app-editar-tienda',
@@ -50,13 +51,29 @@ export class EditarTiendaComponent implements OnInit {
 
   actualizarTienda(): void {
     if (this.tiendaForm.valid) {
-      const tiendaActualizada = {
-        id: this.tiendaId,
+      const tiendaActualizada: UpdateTiendaDTO = {
+        id: this.tiendaId, // ✅ Asegura que el ID sea enviado al backend
         ...this.tiendaForm.value
       };
 
-      this.tiendaService.update(this.tiendaId, tiendaActualizada).subscribe(() => {
-        this.router.navigate(['/tiendas']);
+      this.tiendaService.update(this.tiendaId, tiendaActualizada).subscribe({
+        next: () => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Actualizada',
+            text: 'La tienda ha sido actualizada correctamente.',
+            customClass: {
+              popup: 'rounded-lg shadow-xl',
+              confirmButton: 'bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded'
+            },
+            buttonsStyling: false
+          }).then(() => {
+            this.router.navigate(['/tiendas']);
+          });
+        },
+        error: () => {
+          Swal.fire('Error', 'No se pudo actualizar la tienda.', 'error');
+        }
       });
     } else {
       Swal.fire({
@@ -72,28 +89,4 @@ export class EditarTiendaComponent implements OnInit {
     }
   }
 
-  eliminarTienda(): void {
-    Swal.fire({
-      title: '¿Estás seguro?',
-      text: 'Esta acción eliminará la tienda permanentemente.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#e3342f',
-      cancelButtonColor: '#6c757d'
-    }).then(result => {
-      if (result.isConfirmed) {
-        this.tiendaService.delete(this.tiendaId).subscribe({
-          next: () => {
-            Swal.fire('Eliminada', 'La tienda ha sido eliminada.', 'success');
-            this.router.navigate(['/tiendas']);
-          },
-          error: () => {
-            Swal.fire('Error', 'No se pudo eliminar la tienda.', 'error');
-          }
-        });
-      }
-    });
-  }
 }
