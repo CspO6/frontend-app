@@ -1,0 +1,70 @@
+<div class="p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">Listado de Empleados</h1>
+    <a
+      routerLink="/empleados/crear"
+      class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+    >
+      Crear Empleado
+    </a>
+  </div>
+
+ <table class="table-auto w-full text-sm text-left">
+
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="px-4 py-2">ID</th>
+        <th class="px-4 py-2">Nombre</th>
+        <th class="px-4 py-2">Apellido</th>
+        <th class="px-4 py-2">Correo</th>
+        <th class="px-4 py-2">Cargo</th>
+        <th class="px-4 py-2">Usuario</th>
+        <th class="px-4 py-2">Fecha Ingreso</th>
+        <th class="px-4 py-2">Tienda</th>
+        <th class="px-4 py-2">Estado</th>
+        <th class="px-4 py-2">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let emp of empleados" class="border-b">
+        <td class="px-4 py-2">{{ emp.id }}</td>
+        <td class="px-4 py-2">{{ emp.nombre }}</td>
+        <td class="px-4 py-2">{{ emp.apellido }}</td>
+        <td class="px-4 py-2">{{ emp.correo }}</td>
+        <td class="px-4 py-2">{{ emp.cargo }}</td>
+        <td class="px-4 py-2">{{ emp.usuario }}</td>
+        <td class="px-4 py-2">{{ emp.fechaIngreso | date: 'shortDate' }}</td>
+        <td class="px-4 py-2">{{ emp.tienda?.nombre || 'Sin Tienda' }}</td>
+        <td class="px-4 py-2">
+          <span
+            class="px-2 py-1 rounded text-xs font-medium"
+            [ngClass]="{
+              'bg-green-100 text-green-800': emp.estaActivo,
+              'bg-red-100 text-red-800': !emp.estaActivo
+            }"
+          >
+            {{ emp.estaActivo ? 'Activo' : 'Inactivo' }}
+          </span>
+        </td>
+        <td class="px-4 py-2">
+        <div class="flex items-center gap-2">
+            <button
+            *ngIf="emp.id"
+            (click)="editarEmpleado(emp.id)"
+            class="bg-yellow-400 hover:bg-yellow-500 text-white px-2 py-1 rounded text-xs whitespace-nowrap"
+            >
+            Editar
+            </button>
+            <button
+            *ngIf="emp.id"
+            (click)="eliminarEmpleado(emp.id)"
+            class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs whitespace-nowrap"
+            >
+            Eliminar
+            </button>
+        </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

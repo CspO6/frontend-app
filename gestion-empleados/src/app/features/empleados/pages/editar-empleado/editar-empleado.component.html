@@ -1,0 +1,15 @@
+<h2 class="text-xl font-bold mb-4">Editar empleado</h2>
+<form (ngSubmit)="actualizarEmpleado()" #empleadoForm="ngForm" class="space-y-4">
+  <input type="text" name="nombre" [(ngModel)]="empleado.nombre" placeholder="Nombre" required class="w-full p-2 border rounded" />
+  <input type="text" name="apellido" [(ngModel)]="empleado.apellido" placeholder="Apellido" required class="w-full p-2 border rounded" />
+  <input type="email" name="correo" [(ngModel)]="empleado.correo" placeholder="Correo" required class="w-full p-2 border rounded" />
+  <input type="text" name="cargo" [(ngModel)]="empleado.cargo" placeholder="Cargo" required class="w-full p-2 border rounded" />
+  <input type="text" name="usuario" [(ngModel)]="empleado.usuario" placeholder="Usuario" required class="w-full p-2 border rounded" />
+  <input type="password" name="clave" [(ngModel)]="empleado.clave" placeholder="Clave" class="w-full p-2 border rounded" />
+  <input type="date" name="fechaIngreso" [(ngModel)]="empleado.fechaIngreso" required class="w-full p-2 border rounded" />
+  <input type="checkbox" name="estaActivo" [(ngModel)]="empleado.estaActivo" />
+  <label for="estaActivo">¿Está activo?</label>
+  <input type="number" name="tiendaId" [(ngModel)]="empleado.tiendaId" placeholder="ID Tienda (opcional)" class="w-full p-2 border rounded" />
+  
+  <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">Actualizar</button>
+</form>

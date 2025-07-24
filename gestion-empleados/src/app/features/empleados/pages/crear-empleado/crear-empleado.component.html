@@ -1,0 +1,19 @@
+<h2 class="text-xl font-bold mb-4">Crear nuevo empleado</h2>
+<form (ngSubmit)="guardarEmpleado()" #empleadoForm="ngForm" class="space-y-4">
+  <input type="text" name="nombre" [(ngModel)]="empleado.nombre" placeholder="Nombre" required class="w-full p-2 border rounded" />
+  <input type="text" name="apellido" [(ngModel)]="empleado.apellido" placeholder="Apellido" required class="w-full p-2 border rounded" />
+  <input type="email" name="correo" [(ngModel)]="empleado.correo" placeholder="Correo" required class="w-full p-2 border rounded" />
+  <input type="text" name="cargo" [(ngModel)]="empleado.cargo" placeholder="Cargo" required class="w-full p-2 border rounded" />
+  <input type="text" name="usuario" [(ngModel)]="empleado.usuario" placeholder="Usuario" required class="w-full p-2 border rounded" />
+  <input type="password" name="clave" [(ngModel)]="empleado.clave" placeholder="Clave" required class="w-full p-2 border rounded" />
+  <input type="date" name="fechaIngreso" [(ngModel)]="empleado.fechaIngreso" required class="w-full p-2 border rounded" />
+  
+  <label class="block">
+    <span class="mr-2">¿Está activo?</span>
+    <input type="checkbox" [(ngModel)]="empleado.estaActivo" name="estaActivo" />
+  </label>
+
+  <input type="number" name="tiendaId" [(ngModel)]="empleado.tiendaId" placeholder="ID Tienda (opcional)" class="w-full p-2 border rounded" />
+
+  <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Guardar</button>
+</form>
