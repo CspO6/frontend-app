@@ -62,12 +62,15 @@ Configurar la cadena de conexión en appsettings.json:
 "ConnectionStrings": {
   "DefaultConnection": "Server=localhost;Database=EmpleadosTiendasDB;Trusted_Connection=True;TrustServerCertificate=True;"
 }
-## 3.Ejecutar el proyecto:
+## 3. Ejecutar el proyecto
+
+Desde la raíz del repositorio, navega a la carpeta del proyecto API y ejecuta:
+
 ```bash
-cd api-empleados-tiendas/Backend.API
+cd api-empleados-tiendas/Backend.API/Backend.API
+dotnet tool install --global dotnet-ef   
 dotnet ef database update
 dotnet run
-```
 
 ## Usuario por defecto
 Si no existen usuarios, se creará automáticamente uno:
@@ -103,10 +106,11 @@ Pasos:
 cd api-empleados-tiendas/Backend.API/python-api
 
 # Crear y activar entorno virtual
-python -m venv venv
+py -m venv venv
 venv\Scripts\activate
 
 # Instalar dependencias
+pip install fastapi uvicorn reportlab
 pip install -r requirements.txt
 
 # Ejecutar el servidor
