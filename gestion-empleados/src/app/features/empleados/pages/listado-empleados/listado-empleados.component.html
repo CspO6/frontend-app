@@ -3,24 +3,27 @@
     <h1 class="text-2xl font-bold text-gray-800">Listado de Empleados</h1>
 
     <div class="flex gap-2">
-      <!-- Botón para alternar entre vista de tabla y tarjetas -->
+   
       <button
         (click)="alternarVista()"
         class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded"
       >
         {{ vistaTarjeta ? 'Ver como Tabla' : 'Ver como Tarjetas' }}
       </button>
-
+      <button (click)="descargarReporteEmpleados()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded">
+         Descargar Reporte de Empleados
+      </button>
       <a
         routerLink="/empleados/crear"
         class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
       >
         + Crear Empleado
       </a>
+       
     </div>
   </div>
 
-  <!-- Input de búsqueda -->
+
   <div class="mb-4">
     <input
       type="text"
@@ -31,7 +34,7 @@
     />
   </div>
 
-  <!-- Vista de Tabla -->
+
   <div *ngIf="!vistaTarjeta">
     <table class="table-auto w-full text-sm text-left">
       <thead class="bg-gray-100">
@@ -88,7 +91,7 @@
     </table>
   </div>
 
-  <!-- Vista de Tarjetas -->
+
   <div *ngIf="vistaTarjeta" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
     <app-empleado-card
       *ngFor="let emp of empleadosPaginados"
@@ -96,7 +99,6 @@
     ></app-empleado-card>
   </div>
 
-  <!-- Controles de paginación -->
   <div class="flex justify-center mt-4 space-x-2" *ngIf="totalPaginas > 1">
     <button
       class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"

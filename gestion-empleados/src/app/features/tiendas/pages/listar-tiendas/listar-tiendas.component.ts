@@ -50,14 +50,29 @@ export class ListarTiendasComponent implements OnInit {
   if (this.paginaActual > 1) {
     this.paginaActual--;
   }
-}
-
-siguientePagina(): void {
-  if (this.paginaActual < this.totalPaginas) {
-    this.paginaActual++;
   }
-}
 
+  siguientePagina(): void {
+    if (this.paginaActual < this.totalPaginas) {
+      this.paginaActual++;
+    }
+  }
+  descargarReporteTiendas(): void {
+  this.tiendaService.descargarReporteTiendas().subscribe({
+    next: (blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'reporte_tiendas.pdf';
+      a.click();
+      window.URL.revokeObjectURL(url);
+    },
+    error: (err) => {
+      console.error('Error al descargar reporte de tiendas', err);
+      Swal.fire('Error', 'No se pudo descargar el reporte de tiendas.', 'error');
+    }
+  });
+}
   filtrarTiendas(): void {
     const termino = this.terminoBusqueda.toLowerCase();
     this.tiendasFiltradas = this.tiendas.filter(t =>

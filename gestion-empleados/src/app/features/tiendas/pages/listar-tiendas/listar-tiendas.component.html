@@ -1,12 +1,17 @@
 <div class="p-6">
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-2xl font-bold text-gray-800">Listado de Tiendas</h1>
-    <a
-      routerLink="/tiendas/crear"
-      class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
-    >
-      + Crear Tienda
-    </a>
+    <div class="flex items-center gap-2">
+      <button (click)="descargarReporteTiendas()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded whitespace-nowrap">
+        Descargar Reporte de Tiendas
+      </button>
+      <a
+        routerLink="/tiendas/crear"
+        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded whitespace-nowrap"
+      >
+        + Crear Tienda
+      </a>
+    </div>
   </div>
 
   <div class="mb-4">
@@ -64,7 +69,6 @@
     </tbody>
   </table>
 
-  <!-- Controles de paginación -->
  <div class="flex justify-center mt-4 space-x-2" *ngIf="totalPaginas > 1">
   <button
     class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"

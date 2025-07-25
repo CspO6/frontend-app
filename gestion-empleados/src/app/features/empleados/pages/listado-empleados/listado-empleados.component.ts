@@ -42,6 +42,22 @@ export class ListadoEmpleadosComponent implements OnInit {
     this.router.navigate(['/empleados/editar', id]);
   }
 
+  descargarReporteEmpleados(): void {
+    this.empleadoService.descargarReporteEmpleados().subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'reporte_empleados.pdf';
+        a.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error('Error al descargar reporte de empleados', err);
+        Swal.fire('Error', 'No se pudo descargar el reporte de empleados.', 'error');
+      }
+    });
+  }
  
   paginaActual: number = 1;
   elementosPorPagina: number = 5;

@@ -10,7 +10,7 @@ import { UpdateTiendaDTO } from '../../shared/dtos/UpdateTiendaDTO';
 })
 export class TiendaService {
   private apiUrl = `${environment.apiUrl}/Tienda`;
-
+  private fastApiUrl = 'http://127.0.0.1:8000'; 
   constructor(private http: HttpClient) {}
 
   getAll(): Observable<Tienda[]> {
@@ -32,5 +32,11 @@ export class TiendaService {
 
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  descargarReporteTiendas(): Observable<Blob> {
+    return this.http.get(`${this.fastApiUrl}/reporte-tiendas-pdf`, {
+      responseType: 'blob',
+    });
   }
 }
